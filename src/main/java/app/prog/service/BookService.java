@@ -3,7 +3,9 @@ package app.prog.service;
 import app.prog.model.BookEntity;
 import app.prog.repository.BookRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.Optional;
@@ -39,7 +41,7 @@ public class BookService {
         if (optional.isPresent()) {
             repository.delete(optional.get());
             return optional.get();
-        } else {
+        }
         /*
         TODO-5 : The exception appears as an internal server error, status 500.
         We all know that the appropriate error status is the 404 Not Found.
@@ -48,7 +50,6 @@ public class BookService {
         Link 1 : https://www.baeldung.com/spring-response-entity
         Link 2 : https://www.baeldung.com/exception-handling-for-rest-with-spring
          */
-            throw new RuntimeException("BookEntity." + BookEntityId + " not found");
-        }
+        throw new ResponseStatusException(HttpStatusCode.valueOf(404), "Resource not found",null);
     }
 }
