@@ -1,12 +1,17 @@
 package app.prog.service;
 
+import app.prog.controller.mapper.BookRestMapper;
+import app.prog.controller.response.BookResponse;
 import app.prog.model.BookEntity;
 import app.prog.repository.BookRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.awt.print.Book;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -14,9 +19,26 @@ import java.util.Optional;
 @AllArgsConstructor
 public class BookService {
     private final BookRepository repository;
+    @Autowired
+    private final BookRestMapper bookRestMapper
 
     public List<BookEntity> getBooks() {
         return repository.findAll();
+    }
+    public List<BookResponse> getBookResponses() {
+
+        List<BookEntity> entities = repository.findAll();
+        List<BookResponse> responses = new ArrayList<>();
+        for(int i = 0; i < entities.size(); i++) {
+            responses.add(BookResponse.builder()
+                            .id(entities.get(i).getId())
+                    .build());
+        }
+    }
+    public List<BookResponse> getBookResponses() {
+
+        List<BookEntity> entities = repository.findAll();
+        List<BookResponse> responses = bookRestMapper.toRest(List<BookEntity> books);
     }
 
     public List<BookEntity> createBooks(List<BookEntity> toCreate) {

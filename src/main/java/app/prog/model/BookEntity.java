@@ -19,9 +19,14 @@ public class BookEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private String title;
-    private String author;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "id_author")
+    private AuthorEntity author;
     private Integer pageNumber;
     private LocalDate releaseDate;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "id_category")
+    private CategoryEntity category;
 
     public boolean hasAuthor() {
         return author != null;
